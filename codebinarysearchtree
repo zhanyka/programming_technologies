@@ -1,0 +1,68 @@
+class Node:
+   def _init_(self, key):
+       self.left = None
+       self.right = None
+       self.value = key
+ 
+class BinarySearchTree:
+   def _init_(self):
+       self.root = None
+ 
+   def insert(self, key):
+       if self.root is None:
+           self.root = Node(key)
+       else:
+           self._insert_recursively(self.root, key)
+ 
+   def _insert_recursively(self, current_node, key):
+       if key < current_node.value:
+           if current_node.left is None:
+               current_node.left = Node(key)
+           else:
+               self._insert_recursively(current_node.left, key)
+       elif key > current_node.value:
+           if current_node.right is None:
+               current_node.right = Node(key)
+           else:
+               self._insert_recursively(current_node.right, key)
+ 
+   def inorder_traversal(self, node, result):
+       if node:
+           self.inorder_traversal(node.left, result)
+           result.append(node.value)
+           self.inorder_traversal(node.right, result)
+.
+import tkinter as tk
+from tkinter import simpledialog, messagebox
+ 
+class TreeApp:
+   def _init_(self, master):
+       self.master = master
+       master.title("Бинарное дерево поиска")
+ 
+       self.bst = BinarySearchTree()
+ 
+       self.insert_button = tk.Button(master, text="Вставить", command=self.insert_value)
+       self.insert_button.pack()
+ 
+       self.show_button = tk.Button(master, text="Показать обход", command=self.show_inorder)
+       self.show_button.pack()
+ 
+       self.result_label = tk.Label(master, text="")
+       self.result_label.pack()
+ 
+   def insert_value(self):
+       value = simpledialog.askinteger("Ввод", "Введите значение:")
+       if value is not None:
+           self.bst.insert(value)
+           messagebox.showinfo("Успех", "Значение вставлено")
+ 
+   def show_inorder(self):
+       result = []
+       self.bst.inorder_traversal(self.bst.root, result)
+       self.result_label.config(text="Обход в симметричном порядке: " + ", ".join(map(str, result)))
+ 
+if _name_ == "_main_":
+   root = tk.Tk()
+   app = TreeApp(root)
+   root.mainloop()
